@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Submission — Academic Mission Control</title>
+  <meta name="description" content="Mission Submission: A futuristic, glassmorphic academic tracker for assignments, practicals, and projects with real-time progress and offline persistence.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Ambient Animated Glass Background -->
+  <div class="ambient-background" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
+  <!-- Notification Toast Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+  <div class="app-container">
+    
+    <!-- ================= PAGE 1: LOGIN SCREEN ================= -->
+    <main id="login-view" class="page-view active" role="main">
+      <div class="login-wrapper">
+        <div class="glass-card login-card">
+          <!-- Card Header & Badge -->
+          <div class="login-header">
+            <div class="brand-badge">
+              <svg class="badge-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+              </svg>
+              <span>MISSION CONTROL</span>
+            </div>
+            <h1 class="login-title">Mission Submission</h1>
+            <p class="login-subtitle">Authenticate to access your academic mission tracker and submission status.</p>
+          </div>
+
+          <!-- Login Form -->
+          <form id="login-form" class="login-form" novalidate>
+            <div class="form-group">
+              <label for="student-id" class="form-label">Student ID</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+                <input 
+                  type="text" 
+                  id="student-id" 
+                  class="glass-input" 
+                  placeholder="e.g. STU-2026-904" 
+                  autocomplete="username"
+                  required
+                >
+              </div>
+              <span class="field-error" id="id-error"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="form-label">Password / Security Key</label>
+              <div class="input-wrapper">
+                <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <input 
+                  type="password" 
+                  id="password" 
+                  class="glass-input" 
+                  placeholder="••••••••••••" 
+                  autocomplete="current-password"
+                  required
+                >
+                <button type="button" id="toggle-password-btn" class="password-peek" aria-label="Toggle password visibility">
+                  <svg id="eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              <span class="field-error" id="password-error"></span>
+            </div>
+
+            <div class="form-extra">
+              <label class="remember-label">
+                <input type="checkbox" id="remember-me" checked>
+                <span class="custom-checkbox-mini"></span>
+                <span>Keep me signed in</span>
+              </label>
+            </div>
+
+            <button type="submit" id="login-submit-btn" class="glow-button btn-full">
+              <span>Initiate Mission</span>
+              <svg class="btn-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+
+          <!-- Card Footer -->
+          <div class="login-footer">
+            <div class="theme-quick-switch">
+              <span>Theme:</span>
+              <button class="theme-pill-btn theme-toggle-action" title="Toggle Light/Dark Theme">
+                <span class="theme-mode-text">Dark Mode</span>
+                <span class="theme-icon-box"></span>
+              </button>
+            </div>
+            <p class="footnote">Private student profiles • Progress isolated & saved per Student ID</p>
+          </div>
+        </div>
+      </div>
+    </main>
+
+
+    <!-- ================= PAGE 2: DASHBOARD SCREEN ================= -->
+    <div id="dashboard-view" class="page-view" role="region" aria-label="Dashboard">
+      
+      <!-- Top Navigation Bar -->
+      <header class="app-header glass-card">
+        <div class="header-left">
+          <div class="logo-mark">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div class="title-group">
+            <div class="title-row">
+              <h1 class="app-title">Mission Submission</h1>
+              <span class="version-tag">v2.4 Active</span>
+            </div>
+            <p class="user-greeting" id="user-greeting">Welcome back, <span class="highlight-user">Cadet</span></p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <!-- Theme Toggle Button -->
+          <button id="theme-toggle-btn" class="icon-button theme-toggle-action" aria-label="Toggle Dark and Light Mode" title="Toggle Theme (T)">
+            <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+
+          <!-- Reset State Button -->
+          <button id="reset-btn" class="icon-button" aria-label="Reset all progress" title="Reset all checkboxes">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
+          </button>
+
+          <!-- Logout Button -->
+          <button id="logout-btn" class="glass-pill-btn logout-btn" title="Sign out of mission control">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+              <polyline points="16 17 21 12 16 7"></polyline>
+              <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Container -->
+      <main class="dashboard-content" role="main">
+        
+        <!-- Hero / Mission Progress Master Card -->
+        <section class="mission-status-card glass-card">
+          <div class="progress-details">
+            <div class="status-top">
+              <div class="mission-tag">
+                <span class="pulsing-dot"></span>
+                <span id="mission-status-label">MISSION STATUS: IN PROGRESS</span>
+              </div>
+              <span class="last-synced-badge" id="last-synced-badge">Saved Locally</span>
+            </div>
+
+            <h2 class="progress-headline" id="progress-headline">Academic Flight Plan: <span id="progress-percent-text">0%</span></h2>
+            <p class="progress-subtext" id="progress-subtext">Keep going! Check off your assignments, practical labs, and projects below.</p>
+
+            <!-- Horizontal Progress Bar -->
+            <div class="progress-bar-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar-aria">
+              <div class="progress-bar-fill" id="progress-bar-fill" style="width: 0%;">
+                <div class="progress-glow"></div>
+              </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="status-stats-grid">
+              <div class="stat-item">
+                <span class="stat-number" id="stat-completed">0</span>
+                <span class="stat-label">Tasks Completed</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-number" id="stat-remaining">0</span>
+                <span class="stat-label">Tasks Remaining</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-number" id="stat-total">0</span>
+                <span class="stat-label">Total Milestones</span>
+              </div>
+              <div class="stat-divider"></div>
+              <div class="stat-item">
+                <span class="stat-number" id="stat-subjects-done">0/6</span>
+                <span class="stat-label">Subjects Cleared</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Circular Radial Progress Dial -->
+          <div class="radial-progress-wrapper">
+            <svg class="radial-ring-svg" viewBox="0 0 120 120">
+              <circle class="ring-bg" cx="60" cy="60" r="50"></circle>
+              <circle class="ring-indicator" id="ring-indicator" cx="60" cy="60" r="50"></circle>
+            </svg>
+            <div class="radial-inner-content">
+              <span class="radial-percentage" id="radial-percent">0%</span>
+              <span class="radial-caption">Overall</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Situational Motivational Quotes Radar (Gujarati Punchlines) -->
+        <section class="motivation-banner glass-card" id="motivation-banner" role="region" aria-label="Mission Motivation Radar">
+          <div class="motivation-icon-col">
+            <div class="fire-glow-avatar" id="motivation-avatar">
+              <span class="avatar-emoji" id="avatar-emoji">🔥</span>
+            </div>
+          </div>
+          <div class="motivation-content">
+            <div class="motivation-header-row">
+              <div class="motivation-badge" id="motivation-badge">
+                <span class="pulsing-mini-dot"></span>
+                <span id="motivation-urgency-tag">SUBMISSION ALERT</span>
+              </div>
+            </div>
+            <p class="motivation-punchline" id="motivation-punchline">
+              "Alya bhadva, phone muki de—submission tari gaand ni bahar ubhi che!"
+            </p>
+            <div class="motivation-footer-row">
+              <span class="motivation-subtext" id="motivation-subtext">Deadline darwaje ubhi che • Focus mode on</span>
+              <button type="button" class="quote-shuffle-btn" id="quote-shuffle-btn" title="Next punchline">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                  <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                </svg>
+                <span>Next Kick</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Filter & Search Controls -->
+        <div class="controls-toolbar">
+          <div class="search-input-box">
+            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="subject-search" placeholder="Search subjects or tasks (e.g. AAD, Practicals, Mini Project)..." aria-label="Search subjects">
+            <button id="clear-search-btn" class="clear-search-btn hidden" aria-label="Clear search">✕</button>
+          </div>
+
+          <div class="filter-tabs" role="tablist">
+            <button class="filter-pill active" data-filter="all" role="tab" aria-selected="true">All (6)</button>
+            <button class="filter-pill" data-filter="pending" role="tab" aria-selected="false">Pending</button>
+            <button class="filter-pill" data-filter="completed" role="tab" aria-selected="false">Completed</button>
+          </div>
+        </div>
+
+        <!-- Subjects Grid -->
+        <section class="subjects-grid" id="subjects-grid" aria-label="Subject Cards">
+          <!-- Dynamically populated by script.js -->
+        </section>
+
+      </main>
+
+      <!-- Dashboard Footer -->
+      <footer class="app-footer">
+        <p>Mission Submission • Built with Advanced Glassmorphism • Local State Engine</p>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Confirmation Modal for Reset -->
+  <div id="confirm-modal" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="glass-card modal-card">
+      <div class="modal-icon-badge warning">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/>
+          <line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+      </div>
+      <h3 class="modal-title">Reset All Progress?</h3>
+      <p class="modal-text">This will uncheck all assignments, practicals, and projects. This action cannot be undone.</p>
+      <div class="modal-buttons">
+        <button id="cancel-reset-btn" class="glass-pill-btn secondary-btn">Cancel</button>
+        <button id="confirm-reset-btn" class="glow-button danger-btn">Yes, Reset All</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
