@@ -201,11 +201,11 @@
       tasks: [
         {
           id: "ds_assign",
-          type: "single",
+          type: "none",
           category: "Assignment",
-          label: "Assignment (TBD / Placeholder)",
-          badge: "TBD",
-          badgeType: "tbd",
+          label: "No Assignment Required",
+          badge: "None",
+          badgeType: "none",
         },
         {
           id: "ds_practicals",
@@ -296,12 +296,12 @@
       deadline: "09/10/26",
       tasks: [
         {
-          id: "adbms_assign",
-          type: "none",
+          id: "adbms_assignments",
+          type: "chip_group",
           category: "Assignment",
-          label: "No Assignment Required",
-          badge: "None",
-          badgeType: "none",
+          label: "Assignments 1 to 3",
+          prefix: "A",
+          count: 3,
         },
         {
           id: "adbms_practicals",
@@ -313,11 +313,10 @@
         },
         {
           id: "adbms_proj",
-          type: "none",
+          type: "single",
           category: "Project",
-          label: "No Project Required",
-          badge: "None",
-          badgeType: "none",
+          label: "Mini Project (Advanced Database Implementation)",
+          badge: "Mini Proj",
         },
       ],
     },
